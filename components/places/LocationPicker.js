@@ -6,14 +6,35 @@ import {
   useForegroundPermissions,
   PermissionStatus,
 } from "expo-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getmapPreview } from "../../util/location";
-import { useNavigation } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  useIsFocused,
+} from "@react-navigation/native";
 
-function LocationPicker() {
+function LocationPicker({ onPickLocation }) {
   const [pickedLocation, setPickedLocation] = useState();
   const [InfoInformation, requestPermission] = useForegroundPermissions();
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const route = useRoute();
+
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPickedLocation = {
+        lat: route.params.pickedLat,
+        lng: route.params.pickedLng,
+      };
+      // console.log(mapPickedLocation);
+      setPickedLocation(mapPickedLocation);
+    }
+  }, [route, isFocused]);
+
+  useEffect(() => {
+    onPickLocation(pickedLocation);
+  }, [pickedLocation, onPickLocation]);
 
   async function verifyPermission() {
     if (InfoInformation.status === PermissionStatus.UNDETERMINED) {
@@ -43,12 +64,12 @@ function LocationPicker() {
       lat: location.coords.latitude,
       lng: location.coords.longitude,
     });
-    console.log("location>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    // console.log("location>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     console.log(location);
   }
 
   function pickOnMapHandeler() {
-    navigation.navigate('Map');
+    navigation.navigate("Map");
   }
 
   let locationPreview = <Text>No location picked yet.</Text>;
@@ -108,8 +129,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 4
-  }
+    width: "100%",
+    height: "100%",
+    borderRadius: 4,
+  },
 });

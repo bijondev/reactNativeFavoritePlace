@@ -18,26 +18,17 @@ function Map({ navigation }) {
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
 
+    // console.log(lat);
+    // console.log(lng);
+
     setSelectedLocation({
       lat: lat,
       lng: lng,
     });
   }
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: ({ tintColor }) => (
-        <IconButton
-          icon="save"
-          size={24}
-          color={tintColor}
-          onPress={savePickedLocationHandeler}
-        />
-      ),
-    });
-  }, [navigation, savePickedLocationHandeler]);
-
   const savePickedLocationHandeler = useCallback(() => {
+    // console.log(selectedLocation);
     if (!selectedLocation) {
       Alert.alert(
         "No location picked!",
@@ -51,6 +42,19 @@ function Map({ navigation }) {
       pickedLng: selectedLocation.lng,
     });
   }, [navigation, selectedLocation]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: ({ tintColor }) => (
+        <IconButton
+          icon="save"
+          size={24}
+          color={tintColor}
+          onPress={savePickedLocationHandeler}
+        />
+      ),
+    });
+  }, [navigation, savePickedLocationHandeler]);
 
   return (
     <MapView
