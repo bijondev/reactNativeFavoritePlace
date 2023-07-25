@@ -3,23 +3,27 @@ import { View, StyleSheet, Image, Text, Alert } from "react-native";
 import { useCallback, useLayoutEffect, useState } from "react";
 import IconButton from "../components/ui/IconButton";
 
-function Map({ navigation }) {
-  const [selectedLocation, setSelectedLocation] = useState();
+function Map({ navigation, route }) {
+  const initoalLocation = route.params && {
+    lat: route.params.initialLat,
+    lng: route.params.initialLng,
+  };
+  const [selectedLocation, setSelectedLocation] = useState(initoalLocation);
 
   const region = {
-    latitude: 37.78,
-    longitude: -122.43,
+    latitude: initoalLocation ? initoalLocation.lat : 37.78,
+    longitude: initoalLocation ? initoalLocation.lng : -122.43,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
 
   function selectLocationhandeler(event) {
-    // console.log(event);
+    if (initoalLocation) {
+      return;
+    }
+
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
-
-    // console.log(lat);
-    // console.log(lng);
 
     setSelectedLocation({
       lat: lat,
@@ -44,6 +48,9 @@ function Map({ navigation }) {
   }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
+    if (initoalLocation) {
+      return;
+    }
     navigation.setOptions({
       headerRight: ({ tintColor }) => (
         <IconButton
@@ -54,7 +61,7 @@ function Map({ navigation }) {
         />
       ),
     });
-  }, [navigation, savePickedLocationHandeler]);
+  }, [navigation, savePickedLocationHandeler, initoalLocation]);
 
   return (
     <MapView

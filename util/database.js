@@ -60,10 +60,10 @@ export function fetchPlace() {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `select * from places`,
+        `select * from places order by id desc`,
         [],
         (_, result) => {
-          console.log(result.rows._array);
+          // console.log(result.rows._array);
           const places = [];
 
           for (const dp of result.rows._array) {
@@ -103,7 +103,20 @@ export function fetchPlaceDetails(id) {
           // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
           // console.log(result.rows._array[0]);
 
-          resolve(result.rows._array[0]);
+          const dbPlace = result.rows._array[0];
+
+          const place = new Place(
+            dbPlace.title,
+            dbPlace.imageUri,
+            {
+              lat: dbPlace.lat,
+              lng: dbPlace.lng,
+              address: dbPlace.address,
+            },
+            dbPlace.id
+          );
+
+          resolve(place);
         },
         (_, error) => {
           reject(error);

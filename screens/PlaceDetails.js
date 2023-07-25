@@ -6,7 +6,12 @@ import { fetchPlaceDetails } from "../util/database";
 
 function PlaceDetails({ route, navigation }) {
   const [fetchedPlace, SetFetchedPlace] = useState();
-  function showMaphandeler() {}
+  function showMaphandeler() {
+    navigation.navigate("Map", {
+      initialLat: fetchedPlace.location.lat,
+      initialLng: fetchedPlace.location.lng,
+    });
+  }
 
   const selectedPlaceId = route.params.placeId;
   //   console.log("selectedPlaceId", selectedPlaceId);
@@ -14,7 +19,7 @@ function PlaceDetails({ route, navigation }) {
   useEffect(() => {
     async function loadPlaceData() {
       const place = await fetchPlaceDetails(selectedPlaceId);
-      console.log(place);
+      //   console.log(place);
       SetFetchedPlace(place);
       navigation.setOptions({
         title: place.title,
