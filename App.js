@@ -43,7 +43,7 @@ export default function App() {
             name="AllPlaces"
             component={AllPlaces}
             options={({ navigation }) => ({
-              title: "your favorite places",
+              title: "Your favorite places",
               headerRight: ({ tintColor }) => (
                 <IconButton
                   icon="add"
