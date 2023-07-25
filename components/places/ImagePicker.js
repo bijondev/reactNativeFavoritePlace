@@ -43,7 +43,7 @@ function ImagePicker({ onImageTaken }) {
     });
     setPickedImage(image.uri);
     onImageTaken(image.uri);
-    console.log(image);
+    // console.log(image);
   }
 
   let imagepreview = <Text>No image taken yet.</Text>;
